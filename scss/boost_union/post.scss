@@ -1687,6 +1687,32 @@ body.theme_boost-union-footerbuttonnone.jsenabled {
 
 
 /*=======================================
+ * Settings: AI Course assist.
+ ======================================*/
+
+/*---------------------------------------
+ * Setting: AI Course assist summarize button placement.
+ --------------------------------------*/
+
+.drawer-toggles {
+    .ai-course-summarise-controls.drawer-toggler.drawer-right-toggle .btn img {
+        width: 20px;
+        margin-left: -5px;
+        margin-right: -5.71667px;
+    }
+
+    .drawer-toggler.drawer-right-toggle ~ .ai-course-summarise-controls.drawer-toggler.drawer-right-toggle {
+        top: calc(#{$navbar-height} + 1.4rem + 56.5px);
+    }
+}
+
+@media (max-width: 767.98px) {
+    .drawer-toggles .drawer-toggler.drawer-right-toggle ~ .ai-course-summarise-controls.drawer-toggler.drawer-right-toggle {
+        top: calc(99vh - (60px * 2.5) - 56.5px - .7rem);
+    }
+}
+
+/*=======================================
  * Settings: Smart menus.
  ======================================*/
 

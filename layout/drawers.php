@@ -152,6 +152,15 @@ $bodyattributes = $OUTPUT->body_attributes($extraclasses); // In the original la
 $header = $PAGE->activityheader;
 $headercontent = $header->export_for_template($renderer);
 
+// Check if aiplacement_courseassist is available on this page.
+$hascourseassist = false;
+if (!during_initial_install()
+        && get_config('aiplacement_courseassist', 'version')
+        && $PAGE->context->contextlevel == CONTEXT_MODULE) {
+    // Check if the user has permission to use the AI service.
+    $hascourseassist = aiplacement_courseassist\utils::is_course_assist_available($PAGE->context);
+}
+
 $templatecontext = [
     'sitename' => format_string($SITE->shortname, true, ['context' => context_course::instance(SITEID), "escape" => false]),
     'output' => $OUTPUT,
@@ -172,6 +181,7 @@ $templatecontext = [
     'overflow' => $overflow,
     'headercontent' => $headercontent,
     'addblockbutton' => $addblockbutton,
+    'hascourseassist' => $hascourseassist,
 ];
 
 // Include the template content for the course related hints.
