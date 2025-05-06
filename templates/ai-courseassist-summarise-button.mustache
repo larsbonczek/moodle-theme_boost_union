@@ -26,9 +26,21 @@
     {
     }
 }}
-{{!
-    This template is a modified version of aiplacement_courseassist/summarise_button
-
-    Modifications compared to the original template:
-    * Remove all HTML to prevent the summarise button from being rendered in the default location.
-}}
+<div class="ai-course-summarise-controls pt-3 pb-3">
+    <button class="btn btn-outline-secondary"
+            aria-controls="ai-drawer"
+            type="button"
+            data-action="course-summarise"
+            data-toggle="tooltip"
+            data-html="true"
+            title="{{#str}} summarise_tooltips, aiplacement_courseassist {{/str}}"
+    >
+        <span class="ai-course-summarise-sparkles-icon">
+            {{#pix}} sparkles, aiplacement_courseassist {{/pix}}
+        </span>
+        <span class="ai-course-summarise-sparkles-icon white">
+            {{#pix}} sparkles-white, aiplacement_courseassist {{/pix}}
+        </span>
+        {{#str}} summarise, aiplacement_courseassist {{/str}}
+    </button>
+</div>

@@ -469,6 +469,8 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $header->courseheader = $this->course_header();
         $header->headeractions = $this->page->get_header_actions();
 
+        // TODO $header->headeractions[] = $this->render_from_template('theme_boost_union/ai-courseassist-summarise-button', []);
+
         // Add the course header image for rendering.
         if ($this->page->pagelayout == 'course' && (get_config('theme_boost_union', 'courseheaderimageenabled')
                         == THEME_BOOST_UNION_SETTING_SELECT_YES)) {
@@ -501,6 +503,63 @@ class core_renderer extends \theme_boost\output\core_renderer {
             $header->welcomemessage = \core\user::welcome_message();
         }
         return $this->render_from_template('core/full_header', $header);
+    }
+    /**
+     * Renders the context header for the page.
+     *
+     * @param array $headerinfo Heading information.
+     * @param int $headinglevel What 'h' level to make the heading.
+     * @return string A rendered context header.
+     */
+    public function context_header($headerinfo = null, $headinglevel = 1): string {
+        global $USER;
+        $context = $this->page->context;
+
+        return parent::context_header($headerinfo, $headinglevel); // TODO
+
+        if ($context->contextlevel != CONTEXT_MODULE) {
+            return parent::context_header($headerinfo, $headinglevel);
+        }
+
+        $imagedata = null;
+        $additionalbuttons = null;
+        $prefix = null;
+        if ($this->page->course->format === 'singleactivity') {
+            $heading = format_string($this->page->course->fullname, true, ['context' => $context]);
+        } else {
+            $heading = $this->page->cm->get_formatted_name();
+            $iconurl = $this->page->cm->get_icon_url();
+            $iconclass = $iconurl->get_param('filtericon') ? '' : 'nofilter';
+            $iconattrs = [
+                    'class' => "icon activityicon $iconclass",
+                    'aria-hidden' => 'true'
+            ];
+            $imagedata = html_writer::img($iconurl->out(false), '', $iconattrs);
+            $purposeclass = plugin_supports('mod', $this->page->activityname, FEATURE_MOD_PURPOSE);
+            $purposeclass .= ' activityiconcontainer icon-size-6';
+            $purposeclass .= ' modicon_' . $this->page->activityname;
+            $isbranded = component_callback('mod_' . $this->page->activityname, 'is_branded', [], false);
+            $imagedata = html_writer::tag('div', $imagedata, ['class' => $purposeclass . ($isbranded ? ' isbranded' : '')]);
+            if (!empty($USER->editing)) {
+                $prefix = get_string('modulename', $this->page->activityname);
+            }
+        }
+
+        $additionalbuttons['aicourseassist'] = [
+                'title' => get_string('summarise', 'aiplacement_courseassist'),
+                'image' => 't/sparkles',
+                'linkattributes' => [
+                    'aria-controls' => 'ai-drawer',
+                    'data-action' => 'course-summarise',
+                    'data-toggle' => 'tooltip',
+                    'data-html' => 'true',
+                    'title' => get_string('summarise_tooltips', 'aiplacement_courseassist'),
+                ],
+                'page' => $this->page
+        ];
+
+        $contextheader = new \context_header($heading, $headinglevel, $imagedata, $additionalbuttons, $prefix);
+        return $this->render($contextheader);
     }
 
     /**

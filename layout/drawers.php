@@ -181,7 +181,7 @@ $templatecontext = [
     'overflow' => $overflow,
     'headercontent' => $headercontent,
     'addblockbutton' => $addblockbutton,
-    'hascourseassist' => $hascourseassist,
+    'showcourseassistfooterbutton' => $hascourseassist,
 ];
 
 // Include the template content for the course related hints.
